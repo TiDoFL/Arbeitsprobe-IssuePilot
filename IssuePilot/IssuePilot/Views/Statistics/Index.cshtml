@@ -1,0 +1,50 @@
+﻿@model IssuePilot.Models.ViewModels.Statistics.StatisticsIndexViewModel
+
+@{
+    ViewData["Title"] = "Statistik";
+}
+
+<h1>Statistik</h1>
+
+<table class="table">
+    <tbody>
+        @foreach (var project in Model.Projects)
+        {
+            <tr>
+                <td>
+                    @project.Title
+                </td>
+                <td>
+                    <a class="btn btn-primary" asp-action="Details" asp-route-id="@project.Id">Statistik</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="form-group">
+    <form asp-action="Comparison" method="post">
+        <div class="container">
+            <div class="row">
+                <label for="exampleFormControlSelect1">Wähle zwei Projekte zum Vergleichen:</label>
+                <div class="w-100"></div>
+                <select class="form-control mb-3 selectpicker w-50" asp-for="ComparisonProjectIdFirst">
+                    @foreach (var project in Model.Projects)
+                    {
+                        <option value="@project.Id">@project.Title</option>
+                    }
+                </select>
+                <div class="w-100"></div>
+                <select class="form-control mb-3 w-50 selectpicker" asp-for="ComparisonPojectIdSecond">
+                    @foreach (var project in Model.Projects)
+                    {
+                        <option value="@project.Id">@project.Title</option>
+                    }
+                </select>
+                <div class="w-100"></div>
+                <input class="btn btn-primary" type="submit" value="Vergleichen" />
+            </div>
+        </div>
+    </form>
+
+</div>

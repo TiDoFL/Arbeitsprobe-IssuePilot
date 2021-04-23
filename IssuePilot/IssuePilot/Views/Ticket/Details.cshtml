@@ -1,0 +1,246 @@
+﻿@model IssuePilot.Models.ViewModels.TicketDetailsViewModel
+
+@{
+    ViewData["Title"] = "Ticket-Details";
+}
+
+<h2>@Html.DisplayFor(model => model.Title)</h2>
+<div>
+    <a class="btn btn-primary float-right ml-2 mb-2" asp-action="TicketHistory" asp-route-id="@Model.Id">Ticketverlauf</a>
+    @if (Model.IsCreator == true || User.IsInRole("Admin") || Model.IsProjectOwner == true)
+    {
+        <a class="btn btn-primary float-right ml-2 mb-2" asp-action="Edit" asp-route-id="@Model.Id">Ticket bearbeiten</a>
+        <a class="btn btn-primary float-right ml-2 mb-2" asp-action="Delete" asp-route-id="@Model.Id">Ticket löschen</a>
+    }
+
+
+</div>
+
+<dt class="col-sm-2">
+    Status:
+</dt>
+<dd class="col-sm-10">
+    @Html.DisplayFor(model => model.CurrentTicketStatus)
+</dd>
+@if (Model.CurrentTicketStatus == "Abgeschlossen")
+{
+    <dd>
+        Das Ticket wurde von @Html.DisplayFor(model => model.ClosedByUser) geschlossen.
+    </dd>
+}
+<form asp-action="Details">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="Title" />
+    <div class="form-group">
+        <select asp-for="SelectedTicketStatus" class="selectpicker" asp-items="Model.StatusList">
+        </select>
+        <span asp-validation-for="SelectedTicketStatus" class="text-danger"></span>
+        <input type="submit" value="Status ändern" class="ml-2 btn btn-primary" name="submit" />
+    </div>
+</form>
+<div>
+    <dl class="row">
+
+        <dd class="col-sm-2">
+            @if (Model.CategoriesOfTicket.Count > 1)
+            {
+                <text>Kategorien:</text>
+            }
+            @if (Model.CategoriesOfTicket.Count == 1)
+            {
+                <text>Kategorie:</text>
+            }
+        </dd>
+        <dd class="col-sm-10">
+            @foreach (var ticketCategory in Model.CategoriesOfTicket)
+            {
+                @ticketCategory <text> </text>
+            }
+        </dd>
+        @if (Model.Deadline != null)
+        {
+            <dd class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Deadline)
+            </dd>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Deadline)
+            </dd>
+        }
+
+        <dd class="col-sm-2">
+            Beschreibung
+        </dd>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        @foreach (var image in Model.ImageDataURLList)
+        {
+            <dd >
+                <img class="w-50" src="@image" />
+            </dd>
+        }
+        <dd class="col-sm-2">
+            Erstellt am:
+        </dd>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+        <dd class="col-sm-2">
+            Erstellt von:
+        </dd>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreatedByUser)
+        </dd>
+        @if (Model.CloseDate != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CloseDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CloseDate)
+            </dd>
+        }
+        <dd class="col-sm-2">
+            Priorität
+        </dd>
+        <dd class="col-sm-10">
+            @switch (Model.Weight)
+            {
+                case 1:
+                    <text>Niedrig</text>
+                    break;
+                case 2:
+                    <text>Mittel</text>
+                    break;
+                case 3:
+                    <text>Hoch</text>
+                    break;
+            }
+        </dd>
+        <dd class="col-sm-10">
+            Zugewiesene Nutzer:
+            @if (Model.SelectedAssignees.Count == 0)
+            {
+                <b>Es wurden noch keine Nutzer hinzugefügt!</b>
+            }
+            @foreach (var assignee in Model.SelectedAssignees)
+            {
+                @assignee
+                <text> </text>
+            }
+        </dd>
+    </dl>
+    @if (User.IsInRole("Admin") || Model.IsProjectOwner)
+    {
+        <form asp-action="Details">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Title" />
+            <div class="form-group">
+                <label asp-for="SelectedAssigneesIds" class="control-label"></label>
+                <select asp-for="SelectedAssigneesIds" class="selectpicker" asp-items="Model.MemberList" multiple data-live-search="true"></select>
+                <span asp-validation-for="SelectedAssigneesIds" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Zugewiesene Mitglieder aktualisieren" class="btn btn-primary" name="submit" />
+            </div>
+        </form>
+    }
+
+    <form asp-action="Details" class="mb-5">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Title" />
+        <div class="form-group">
+            <input type="submit" value="Sich selbst zuweisen" class="btn btn-primary" name="submit" />
+        </div>
+    </form>
+    Fügen Sie einen Kommentar hinzu!
+    <form asp-action="Details" class="mb-2">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Title" />
+        <div class="form-group">
+            <input asp-for="CommentInputText" class="form-control" />
+            <span asp-validation-for="CommentInputText" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Kommentar hinzufügen" class="btn btn-primary" name="submit">
+        </div>
+    </form>
+    @foreach (var comment in Model.CommentsOfTicket.OrderBy(comment => comment.CreateDate))
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                @Html.DisplayFor(modelComment => comment.Creator.UserName)
+                <div class="text-right px-2">
+                    @Html.DisplayFor(modelComment => comment.CreateDate)
+                </div>
+            </div>
+            <div class="card-body">
+                @Html.DisplayFor(modelComment => comment.Text)
+            </div>
+
+
+
+        </div>
+        @if (User.IsInRole("Admin") || comment.Creator.UserName == User.Identity.Name || Model.IsProjectOwner)
+        {
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                Kommentar löschen
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Kommentar löschen?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <form asp-action="Details">
+                                <button type="button" class="btn btn-secondary mb-2" data-dismiss="modal">Schließen</button>
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="Id" />
+                                <input type="hidden" asp-for="Title" />
+                                <input type="hidden" asp-for="SelectedCommentId" value="@comment.Id" />
+                                <input type="hidden" asp-for="SelectedCommendUserId" value="@comment.Creator.Id" />
+                                <input type="hidden" asp-for="IsProjectOwner" />
+                                <div class="form-group">
+                                    <input type="submit" value="Löschen" class="btn btn-danger" name="submit">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@{
+    var prevDisabled = !Model.CommentsOfTicket.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.CommentsOfTicket.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Details"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.CommentsOfTicket.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled">
+    Zurück
+</a>
+<a asp-action="Details"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.CommentsOfTicket.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled">
+    Weiter
+</a>

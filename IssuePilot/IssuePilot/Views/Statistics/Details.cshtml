@@ -1,0 +1,156 @@
+﻿@model IssuePilot.Models.ViewModels.Statistics.StatisticsViewModel
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<script src="~/lib/fullcalendar/main.js"></script>
+<link href="~/lib/fullcalendar/main.css" rel="stylesheet" />
+<script src="~/lib/fullcalendar/locales-all.js"></script>
+
+<script src="~/js/statisticsDetails.js"></script>
+<script src="~/js/calendarDetails.js"></script>
+
+<!-- Quelle: https://www.c-sharpcorner.com/article/creating-charts-with-asp-net-core/  -->
+<script>
+    /* diagramm */
+    var XLabelsStatus = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ListNumbersOfTicketStatus.Select(x => x.StatusName).ToList()));
+    var YValuesStatus = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ListNumbersOfTicketStatus.Select(x => x.NumberOfTicketsWithStatus).ToList()));
+
+    var XLabelsCategory = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ListNumberOfTimesCategoryWasUsed.Select(x => x.NameOfCategory).ToList()));
+    var YValuesCategory = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ListNumberOfTimesCategoryWasUsed.Select(x => x.NumberOfCategoryUses).ToList()));
+
+    var XLabelsTicketCreated = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ListNumberOfCreatedTicketsByUsers.Select(x => x.UserName).ToList()));
+    var YValuesTicketCreated = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ListNumberOfCreatedTicketsByUsers.Select(x => x.NumberOfTickets).ToList()));
+
+    /* calendar */
+    var listOfTicketCreateEvents =  @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ListOfTicketCreatedDate.ToList()));
+    var listOfTicketClosedEvents =  @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.ListOfTicketClosedDate.ToList()));
+</script>
+
+@{
+    ViewData["Title"] = "Statistik";
+}
+
+<div>
+    <h2>Statistik-Details des Projektes  @Model.ProjectData.Title</h2>
+    <hr />
+
+    <dl class="row">
+        <dt class="col-sm-6">Allgemeine Informationen</dt>
+        <dt class="col-sm-6">Wer hat die meisten Tickets erstellt?</dt>
+
+        <dd class="col-sm-6">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>
+                            Anzahl Mitglieder:
+                        </th>
+                        <td>
+                            @Model.NumberOfMembers
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Anzahl erstellter Tickets:
+                        </th>
+                        <td>
+                            @Model.NumberOfTicketsCreated
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Anzahl gelöschter Tickets:
+                        </th>
+                        <td>
+                            @Model.NumberOfDeletedTickets
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Anzahl von Tickets, welche die Deadline verpasst haben:
+                        </th>
+                        <td>
+                            @Model.NumberOfTicketsOverDeadline
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            AVG Bearbeitungszeit eines Tickets:
+                        </th>
+                        <td>
+                            @string.Format("{0}h", (Model.AVGProcessingTimeOfTicketsInDays.Days * 24) + Model.AVGProcessingTimeOfTicketsInDays.Hours)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </dd>
+
+        <dd class="col-sm-6">
+            <div class="box-body">
+                <div class="chart-container">
+                    <canvas id="TicketCreated" style="width:100%; height:500px"></canvas>
+                </div>
+            </div>
+        </dd>
+    </dl>
+
+
+    <dl class="row">
+        <dd class="col-sm-12">
+            <h2>Rangliste zugeteilter Tickets</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Benutzer
+                        </th>
+                        <th>
+                            Tickets zugeordnet
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.ListNumberOfTicketsAssignedToUser)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => user.UserName)
+                            </td>
+                            <td>
+                                @user.NumberOfTickets
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </dd>
+    </dl>
+
+    <dl class="row">
+        <dt class="col-sm-6">
+            Aufschlüsselung verwendeter Kategorien
+        </dt>
+
+        <dt class="col-sm-6">
+            Aufschlüsselung nach Status
+        </dt>
+    </dl>
+    <dl class="row">
+        <dd class="col-sm-6">
+            <div class="box-body">
+                <div class="chart-container">
+                    <canvas id="Category" style="width:100%; height:500px"></canvas>
+                </div>
+            </div>
+        </dd>
+        <dd class="col-sm-6">
+            <div class="box-body">
+                <div class="chart-container">
+                    <canvas id="Status" style="width:100%; height:500px"></canvas>
+                </div>
+            </div>
+        </dd>
+    </dl>
+</div>
+
+<div id='calendar'></div>

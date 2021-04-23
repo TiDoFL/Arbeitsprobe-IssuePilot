@@ -1,0 +1,228 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+/* --------------------------------------------------
+ * --- FONTS ------------------------------------
+ * -------------------------------------------------- */
+
+@font-face {
+    font-family: "Source Sans Pro";
+    src: url(/css/fonts/SourceSansPro-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Montserrat-Medium";
+    src: url(/css/fonts/Montserrat-Medium.ttf)
+}
+
+@font-face {
+    font-family: "Montserrat-Regular";
+    src: url(/css/fonts/Montserrat-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Montserrat-Semibold";
+    src: url(/css/fonts/Montserrat-SemiBold.ttf);
+}
+/*  OLD*/
+
+a.navbar-brand {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+    color: #111111;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #4B53E8;
+    border-color: #4B53E8;
+}
+    .btn-primary:hover {
+        color: #fff;
+        background-color: #4AB6E8;
+        border-color: #4AB6E8;
+    }
+
+    .btn-primary:focus, .btn-primary.focus {
+        box-shadow: 0 0 0 0.2rem #4AB6E8;
+    }
+
+.btn-sort {
+    color: #111111;
+    background-color: #EDF2F4;
+    border-color: #EDF2F4;
+    box-shadow: 0 0 0 0.1rem rgba(130, 138, 145, 0.5);
+}
+    .btn-sort:hover {
+        color: #111111;
+        background-color: #EDF2F4;
+        border-color: #EDF2F4;
+
+    }
+
+    
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.border-top {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-family: 'Source Sans Pro';
+    background-color: #EDF2F4;
+
+}
+
+h3,h2,h1{
+    font-family: Montserrat-Medium;
+}
+a {
+    color: #111111;
+}
+img {
+    height: 100%;
+    width: 100%;
+}
+.btn{
+    font-family:Montserrat-Medium;
+}
+
+.gradient-blue {
+    display: block;
+    width: 100%;
+    padding: 0.05rem 1.5rem;
+    font-weight: 400;
+    text-align: inherit;
+    white-space: nowrap;
+    border: 0;
+    background-image: linear-gradient(to right,#4AB6E8,#4B53E8);
+    color: #fff;
+}
+
+.gradient-blue:hover, .gradient-blue:focus {
+        text-decoration: none;
+        color: #fff;
+}
+.dropdown-item.active, .dropdown-item:active {
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background-image: linear-gradient(to right,#4AB6E8,#4B53E8);
+    color: #fff;
+}
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.05rem 1.5rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
+
+.icon-wrapper {
+    position: absolute;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.1rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+
+.has-search {
+    padding-left: 2.375rem;
+}
+
+.icon-padding {
+    width: 50%;
+    height: 50%;
+}
+
+.text-line-limit {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.login,
+.image {
+    min-height: 100vh;
+}
+
+.bg-login-image {
+    background-image: url('../img/Login.svg');
+    background-size: cover;
+    background-position: center center;
+}
+
+.bg-login {
+    background-color: #e5e5e5 !important;
+}
+
+.leftside, .rightside {
+    height: 100vh;
+    white-space: nowrap;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.bg-navbar {
+    background-color: #242A33 !important;
+}
+
+.thicker-border {
+    border: 3px solid;
+}
+.text-link{
+    font-weight: bold;
+}
+

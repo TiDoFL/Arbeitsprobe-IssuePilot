@@ -1,0 +1,44 @@
+﻿@model IssuePilot.Models.ViewModels.ProjectMemberViewModel
+
+@{
+    ViewData["Title"] = "Benutzer hinzufügen";
+}
+
+<h2>Füge einen Benutzer hinzu</h2>
+<hr />
+<div class="row">
+    <div class="col-md-5">
+        <form asp-action="AddMember">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label">Nutzer auswählen</label>
+                <select asp-for="UserId" class="form-control" asp-items="ViewBag.Users">
+                </select>
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ProjectRoleId" class="control-label">Rolle zuweisen</label>
+                <select asp-for="ProjectRoleId" class="form-control" asp-items="ViewBag.Roles">
+                </select>
+                <span asp-validation-for="ProjectRoleId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" asp-for="ProjectId" value="@Model.ProjectId" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Hinzufügen" class="btn btn-primary" />
+                <a class="btn btn-primary ml-2" asp-action="Members" asp-route-id="@Model.ProjectId" >Zurück</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

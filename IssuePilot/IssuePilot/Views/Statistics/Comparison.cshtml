@@ -1,0 +1,297 @@
+﻿@model IssuePilot.Models.ViewModels.Statistics.ComparisonViewModel
+
+@{
+    ViewData["Title"] = "Statistik vergleichen";
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<script src="~/lib/fullcalendar/main.js"></script>
+<link href="~/lib/fullcalendar/main.css" rel="stylesheet" />
+<script src="~/lib/fullcalendar/locales-all.js"></script>
+
+<script src="~/js/statisticsComparison.js"></script>
+
+
+<script>
+    /* diagramm */
+    var XLabelsStatusFirst = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.StatisticsModelFirst.ListNumbersOfTicketStatus.Select(x => x.StatusName).ToList()));
+    var YValuesStatusFirst = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.StatisticsModelFirst.ListNumbersOfTicketStatus.Select(x => x.NumberOfTicketsWithStatus).ToList()));
+
+    var XLabelsCategoryFirst = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.StatisticsModelFirst.ListNumberOfTimesCategoryWasUsed.Select(x => x.NameOfCategory).ToList()));
+    var YValuesCategoryFirst = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.StatisticsModelFirst.ListNumberOfTimesCategoryWasUsed.Select(x => x.NumberOfCategoryUses).ToList()));
+
+    var XLabelsTicketCreatedFirst = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.StatisticsModelFirst.ListNumberOfCreatedTicketsByUsers.Select(x => x.UserName).ToList()));
+    var YValuesTicketCreatedFirst = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.StatisticsModelFirst.ListNumberOfCreatedTicketsByUsers.Select(x => x.NumberOfTickets).ToList()));
+
+    var XLabelsStatusSecond = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.StatisticsModelSecond.ListNumbersOfTicketStatus.Select(x => x.StatusName).ToList()));
+    var YValuesStatusSecond = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.StatisticsModelSecond.ListNumbersOfTicketStatus.Select(x => x.NumberOfTicketsWithStatus).ToList()));
+
+    var XLabelsCategorySecond = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.StatisticsModelSecond.ListNumberOfTimesCategoryWasUsed.Select(x => x.NameOfCategory).ToList()));
+    var YValuesCategorySecond = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.StatisticsModelSecond.ListNumberOfTimesCategoryWasUsed.Select(x => x.NumberOfCategoryUses).ToList()));
+
+    var XLabelsTicketCreatedSecond = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.StatisticsModelSecond.ListNumberOfCreatedTicketsByUsers.Select(x => x.UserName).ToList()));
+    var YValuesTicketCreatedSecond = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.StatisticsModelSecond.ListNumberOfCreatedTicketsByUsers.Select(x => x.NumberOfTickets).ToList()));
+</script>
+
+<div class="d-md-flex h-md-100 align-items-center">
+    <div class="col-md-6 p-0 bg-indigo h-md-100">
+        <div>
+            <h2>@Model.StatisticsModelFirst.ProjectData.Title</h2>
+            <hr />
+
+            <dl class="row">
+                <dt class="col-sm-6">Allgemeine Informationen</dt>
+                <dt class="col-sm-6">Wer hat die meisten Tickets erstellt?</dt>
+
+                <dd class="col-sm-6">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    Anzahl Mitglieder:
+                                </th>
+                                <td>
+                                    @Model.StatisticsModelFirst.NumberOfMembers
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Anzahl erstellter Tickets:
+                                </th>
+                                <td>
+                                    @Model.StatisticsModelFirst.NumberOfTicketsCreated
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Anzahl gelöschter Tickets:
+                                </th>
+                                <td>
+                                    @Model.StatisticsModelFirst.NumberOfDeletedTickets
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Anzahl von Tickets, welche die Deadline verpasst haben:
+                                </th>
+                                <td>
+                                    @Model.StatisticsModelFirst.NumberOfTicketsOverDeadline
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    AVG Bearbeitungszeit eines Tickets:
+                                </th>
+                                <td>
+                                    @string.Format("{0}h", (Model.StatisticsModelFirst.AVGProcessingTimeOfTicketsInDays.Days * 24) + Model.StatisticsModelFirst.AVGProcessingTimeOfTicketsInDays.Hours)
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </dd>
+
+                <dd class="col-sm-6">
+                    <div class="box-body">
+                        <div class="chart-container">
+                            <canvas id="TicketCreatedFirst" style="width:100%; height:500px"></canvas>
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+
+
+            <dl class="row">
+                <dd class="col-sm-12">
+                    <h2>Rangliste zugeteilter Tickets</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Benutzer
+                                </th>
+                                <th>
+                                    Tickets zugeordnet
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.StatisticsModelFirst.ListNumberOfTicketsAssignedToUser)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => user.UserName)
+                                    </td>
+                                    <td>
+                                        @user.NumberOfTickets
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="col-sm-6">
+                    Aufschlüsselung verwendeter Kategorien
+                </dt>
+
+                <dt class="col-sm-6">
+                    Aufschlüsselung nach Status
+                </dt>
+            </dl>
+            <dl class="row">
+                <dd class="col-sm-6">
+                    <div class="box-body">
+                        <div class="chart-container">
+                            <canvas id="CategoryFirst" style="width:100%; height:500px"></canvas>
+                        </div>
+                    </div>
+                </dd>
+                <dd class="col-sm-6">
+                    <div class="box-body">
+                        <div class="chart-container">
+                            <canvas id="StatusFirst" style="width:100%; height:500px"></canvas>
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+        </div>
+
+
+    </div>
+
+
+
+
+    <div class="col-md-6 p-0 bg-indigo h-md-100">
+        <div>
+            <h2>@Model.StatisticsModelSecond.ProjectData.Title</h2>
+            <hr />
+
+            <dl class="row">
+                <dt class="col-sm-6">Allgemeine Informationen</dt>
+                <dt class="col-sm-6">Wer hat die meisten Tickets erstellt?</dt>
+
+                <dd class="col-sm-6">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    Anzahl Mitglieder:
+                                </th>
+                                <td>
+                                    @Model.StatisticsModelSecond.NumberOfMembers
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Anzahl erstellter Tickets:
+                                </th>
+                                <td>
+                                    @Model.StatisticsModelSecond.NumberOfTicketsCreated
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Anzahl gelöschter Tickets:
+                                </th>
+                                <td>
+                                    @Model.StatisticsModelSecond.NumberOfDeletedTickets
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    Anzahl von Tickets, welche die Deadline verpasst haben:
+                                </th>
+                                <td>
+                                    @Model.StatisticsModelSecond.NumberOfTicketsOverDeadline
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    AVG Bearbeitungszeit eines Tickets:
+                                </th>
+                                <td>
+                                    @string.Format("{0}h", (Model.StatisticsModelSecond.AVGProcessingTimeOfTicketsInDays.Days * 24) + Model.StatisticsModelSecond.AVGProcessingTimeOfTicketsInDays.Hours)
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </dd>
+
+                <dd class="col-sm-6">
+                    <div class="box-body">
+                        <div class="chart-container">
+                            <canvas id="TicketCreatedSecond" style="width:100%; height:500px"></canvas>
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+
+
+            <dl class="row">
+                <dd class="col-sm-12">
+                    <h2>Rangliste zugeteilter Tickets</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Benutzer
+                                </th>
+                                <th>
+                                    Tickets zugeordnet
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.StatisticsModelSecond.ListNumberOfTicketsAssignedToUser)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => user.UserName)
+                                    </td>
+                                    <td>
+                                        @user.NumberOfTickets
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </dd>
+            </dl>
+
+            <dl class="row">
+                <dt class="col-sm-6">
+                    Aufschlüsselung verwendeter Kategorien
+                </dt>
+
+                <dt class="col-sm-6">
+                    Aufschlüsselung nach Status
+                </dt>
+            </dl>
+            <dl class="row">
+                <dd class="col-sm-6">
+                    <div class="box-body">
+                        <div class="chart-container">
+                            <canvas id="CategorySecond" style="width:100%; height:500px"></canvas>
+                        </div>
+                    </div>
+                </dd>
+                <dd class="col-sm-6">
+                    <div class="box-body">
+                        <div class="chart-container">
+                            <canvas id="StatusSecond" style="width:100%; height:500px"></canvas>
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+        </div>
+
+
+    </div>
+
+
+</div>

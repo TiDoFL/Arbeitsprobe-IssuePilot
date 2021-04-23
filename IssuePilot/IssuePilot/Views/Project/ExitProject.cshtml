@@ -1,0 +1,23 @@
+﻿@model IssuePilot.Models.ViewModels.ExitProjectViewModel
+
+@{
+    ViewData["Title"] = "Projekt verlassen";
+}
+
+<h1>Bist du sicher, dass du das Projekt verlassen möchtest?</h1>
+<div>
+    <a asp-action="Members" asp-route-id="@Model.ProjectId">Zurück</a>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ExitProject">
+            <div class="form-group">
+                <input type="hidden" asp-for="ProjectId" value="@Model.ProjectId" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ExitProject" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

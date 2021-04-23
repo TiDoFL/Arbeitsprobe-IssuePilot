@@ -1,0 +1,68 @@
+﻿@model IssuePilot.Models.ViewModels.TicketHistoryViewModel
+
+@{
+    ViewData["Title"] = "Ticketverlauf";
+}
+<h2>Ticketverlauf</h2>
+<hr />
+<h4>@Html.DisplayFor(model => model.Title)</h4>
+@foreach (var ticketHistoryEntry in Model.TicketHistoryEntriesOfTicket.OrderByDescending(ticketHistoryEntry => ticketHistoryEntry.EntryDate))
+{
+<p>
+
+    @Html.DisplayFor(modelticketHistoryEntry => ticketHistoryEntry.EntryCreator.UserName)
+    @switch (ticketHistoryEntry.EntryCaseId)
+    {
+        case IssuePilot.Models.DBModels.EntryCaseId.UserAdded:
+            <text>hat den Nutzer</text>
+            @Html.DisplayFor(modelticketHistoryEntry => ticketHistoryEntry.User.UserName)
+            <text>dem Ticket hinzugefügt am</text>
+            @Html.DisplayFor(modelticketHistoryEntry => ticketHistoryEntry.EntryDate)
+            break;
+        case IssuePilot.Models.DBModels.EntryCaseId.UserRemoved:
+            <text>hat den Nutzer</text>
+            @Html.DisplayFor(modelticketHistoryEntry => ticketHistoryEntry.User.UserName)
+            <text>vom Ticket entfernt am </text>
+            @Html.DisplayFor(modelticketHistoryEntry => ticketHistoryEntry.EntryDate)
+            break;
+        case IssuePilot.Models.DBModels.EntryCaseId.TicketOpened:
+            <text>hat den Status des Tickets auf Offen gestellt am </text>
+            @Html.DisplayFor(modelticketHistoryEntry => ticketHistoryEntry.EntryDate)
+            break;
+        case IssuePilot.Models.DBModels.EntryCaseId.TicketCanceled:
+            <text>hat den Status des Tickets auf Abgebrochen gestellt am </text>
+            @Html.DisplayFor(modelticketHistoryEntry => ticketHistoryEntry.EntryDate)
+            break;
+        case IssuePilot.Models.DBModels.EntryCaseId.TicketClosed:
+            <text>hat das Ticket geschlossen am </text>
+            @Html.DisplayFor(modelticketHistoryEntry => ticketHistoryEntry.EntryDate)
+            break;
+        case IssuePilot.Models.DBModels.EntryCaseId.TicketInProgress:
+            <text>hat den Status des Tickets auf in Bearbeitung gestellt am </text>
+            @Html.DisplayFor(modelticketHistoryEntry => ticketHistoryEntry.EntryDate)
+            break;
+        case IssuePilot.Models.DBModels.EntryCaseId.TicketPaused:
+            <text>hat den Status des Tickets auf Pause gestellt am </text>
+            @Html.DisplayFor(modelticketHistoryEntry => ticketHistoryEntry.EntryDate)
+            break;
+    }
+</p>
+}
+
+                <p>Erster Eintrag: Das Ticket wurde von @Html.DisplayFor(model => model.CreatorName) erstellt am @Html.DisplayFor(model => model.CreateDate)</p>
+
+                @{
+                    var prevDisabled = !Model.TicketHistoryEntriesOfTicket.HasPreviousPage ? "disabled" : "";
+                    var nextDisabled = !Model.TicketHistoryEntriesOfTicket.HasNextPage ? "disabled" : "";
+                }
+
+                <a asp-action="TicketHistory"
+                   asp-route-pageNumber="@(Model.TicketHistoryEntriesOfTicket.PageIndex - 1)"
+                   class="btn btn-default @prevDisabled">
+                    Zurück
+                </a>
+                <a asp-action="TicketHistory"
+                   asp-route-pageNumber="@(Model.TicketHistoryEntriesOfTicket.PageIndex + 1)"
+                   class="btn btn-default @nextDisabled">
+                    Weiter
+                </a>

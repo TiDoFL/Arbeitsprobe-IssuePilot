@@ -1,0 +1,121 @@
+﻿@page
+@model LoginModel
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Login";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - IssuePilot</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-select.min.css" />
+</head>
+<body>
+    <main role="main">
+
+        <div class="row no-gutters">
+            <div class="col-md-6 bg-login-image leftside">
+                <div class="d-flex justify-content-center align-items-center">                   
+                    <div  class="col-lg-10 col-xl-7 mx-auto">   
+                        <section>
+                            <h3 class="text-white d-flex justify-content-center">Anmelden als <br />Demo-Nutzer</h3>
+                            @* Login Admin *@
+                            <form method="post">
+                                <div class="form-group">
+                                    <input type="hidden" asp-for="Input.UserName" class="form-control" value="DemoAdmin" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="hidden" asp-for="Input.Password" class="form-control" value="password" />
+                                </div>
+
+                                <div class="form-group mb-4 d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-outline-light rounded-pill thicker-border">Admin</button>
+                                </div>
+                            </form>
+
+                            @* Login Manager *@
+                            <form method="post">
+                                <div class="form-group">
+                                    <input type="hidden" asp-for="Input.UserName" class="form-control" value="manager" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="hidden" asp-for="Input.Password" class="form-control" value="password" />
+                                </div>
+
+                                <div class="form-group mb-4 d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-outline-light rounded-pill thicker-border">Manager</button>
+                                </div>
+                            </form>
+
+                            @* Login User *@
+                            <form method="post">
+                                <div class="form-group">
+                                    <input type="hidden" asp-for="Input.UserName" class="form-control" value="Benutzer" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="hidden" asp-for="Input.Password" class="form-control" value="password" />
+                                </div>
+
+                                <div class="form-group mb-4 d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-outline-light rounded-pill thicker-border">Benutzer</button>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 bg-login rightside">
+                <div class="d-flex justify-content-center align-items-center">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-10 col-xl-7 mx-auto">
+                                <section>
+                                    <img src="~/img/Logo-gross.svg" />
+                                    <form id="account" method="post">
+                                        <div asp-validation-summary="All" class="text-danger"></div>
+                                        <div class="form-group mb-4">
+                                            <input asp-for="Input.UserName" class="form-control rounded-pill border-0 shadow-sm px-4" placeholder="Benutzername" />
+                                            <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group mb-4">
+                                            <input asp-for="Input.Password" class="form-control rounded-pill border-0 shadow-sm px-4 text-primary" placeholder="Passwort" />
+                                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                        </div>
+                                        <div class="mb-4 d-flex justify-content-center">
+                                            <button type="submit" class="btn btn-primary rounded shadow-sm">Anmelden</button>
+                                        </div>
+                                    </form>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+    </main>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap-select.min.js"></script>
+
+
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }
+</body>
+</html>

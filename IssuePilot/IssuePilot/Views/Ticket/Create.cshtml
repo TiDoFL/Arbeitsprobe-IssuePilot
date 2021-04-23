@@ -1,0 +1,71 @@
+﻿@model IssuePilot.Models.ViewModels.TicketCreateInputModel
+
+@{
+    ViewData["Title"] = "Ticket erstellen";
+}
+
+<h1>Ticket erstellen</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post" asp-controller="Ticket" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label">Titel</label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Deadline" class="control-label"></label>
+                <input asp-for="Deadline" class="form-control" />
+                <span asp-validation-for="Deadline" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label">Beschreibung</label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Weight" class="control-label">Priorität</label>
+                <select asp-for="Weight" class="form-control">
+                    <option value="0">Keine Gewichtung</option>
+                    <option value="1">Niedrig</option>
+                    <option value="2">Mittel</option>
+                    <option value="3">Hoch</option>
+                </select>
+                <span asp-validation-for="Weight" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SelectedTicketCategories" class="control-label">Kategorien:</label>
+                <select asp-for="SelectedTicketCategories" class="selectpicker ml-2" asp-items="Model.CategoriesOfProject" multiple>
+                </select>
+                <span asp-validation-for="SelectedTicketCategories" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SelectedAssignees" class="control-label">Mitglieder zur Bearbeitung zuweisen:</label>
+                <select asp-for="SelectedAssignees" class="selectpicker ml-2" asp-items="Model.Members" multiple>
+                </select>
+                <span asp-validation-for="SelectedAssignees" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="file1">Bild(er) zum Ticket hochladen</label>
+                <input type="file" class="" multiple="multiple" id="file1"
+                       name="file1" accept="image/*" />
+            </div>
+            <input type="hidden" asp-for="ProjectId" />
+            <div class="form-group">
+                <input type="submit" value="Ticket erstellen" class="btn btn-primary" />
+            </div>
+        </form>
+        <div class="form-group">
+            <input type="hidden" asp-for="ProjectId" />
+            <a class="btn btn-primary" asp-action="Tickets" asp-route-id="@Model.ProjectId">Zurück zu Tickets</a>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

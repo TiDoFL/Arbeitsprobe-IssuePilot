@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+<ul class="navbar-nav ">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li >
+            <div class="nav-link text-light">@User.Identity.Name</div>
+        </li>
+        <li class="nav-link text-light">Logout um:  @DateTime.Now.AddMinutes(30).ToString("t") Uhr</li>
+        <li class="nav-item">
+            <form  asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Dashboard", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-light"><img src="~/img/Logout.svg" /></button>
+            </form>
+        </li>
+    }
+</ul>

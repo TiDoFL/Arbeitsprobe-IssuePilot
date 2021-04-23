@@ -1,0 +1,12 @@
+﻿@model ErrorViewModel
+    <h1 class="text-danger">Fehler</h1>
+    <h2>Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder kontaktieren Sie den Administrator.</h2>
+    <a asp-area="" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Verstanden!</a>
+
+
+    @if (Model.ShowRequestId)
+    {
+        <p>
+            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        </p>
+    }

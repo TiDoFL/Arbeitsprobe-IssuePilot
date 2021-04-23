@@ -1,0 +1,70 @@
+﻿@using IssuePilot.Helper;
+@model PaginatedList<IssuePilot.Models.Project>
+
+@{
+    ViewData["Title"] = "Projekt auswählen";
+}
+<h2>Wähle ein Projekt zum Erstellen des Tickets aus</h2>
+
+<form asp-action="SelectProject" asp-route-sortOrder="@ViewData["CurrentSort"]">
+    <div class="form-group">
+        <span class="icon-wrapper">
+            <img class="icon-padding" src="~/img/Search.svg" />
+        </span>
+        <input class="has-search form-control" placeholder="Suchen" type="text" name="SearchString" value="@ViewData["CurrentFilter"]" data-toggle="tooltip" data-placement="top" title="Nach Titel oder Beschreibung suchen" />
+    </div>
+</form>
+
+
+<table class="table-sm table-hover text-break">
+    <thead>
+        <tr>
+            <th scope="col" class="w-25">
+                <a asp-action="SelectProject" asp-route-sortOrder="@ViewData["TitleSortParm"]">Titel</a>
+            </th>
+            <th scope="col" class="w-25">
+                Beschreibung
+            </th>
+            <th scope="col" class="w-25">
+                <a asp-action="SelectProject" asp-route-sortOrder="@ViewData["DateSortParm"]">Erstelldatum</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td scope="row">
+                    <a asp-action="Create" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Title)</a>
+</td>
+                <td class="text-line-limit">
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="SelectProject"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled">
+    Zurück
+</a>
+<a asp-action="SelectProject"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled">
+    Weiter
+</a>

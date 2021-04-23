@@ -1,0 +1,54 @@
+﻿@using IssuePilot.Helper;
+@model PaginatedList<IssuePilot.Models.ViewModels.NewsfeedListViewModel>
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Dashboard</h1>
+@foreach (var item in Model)
+{
+    @if (!item.Seen)
+    {
+        <div class="card mb-3 bg-danger text-white">
+            <div class="card-header">
+                @Html.DisplayFor(modelItem => item.NewsText)
+            
+                <div class="text-right px-2">
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                @Html.DisplayFor(modelItem => item.NewsText)
+            
+                <div class="text-right px-2">
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </div>
+            </div>
+        </div>
+    }
+
+
+}
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+    Zurück
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+    Weiter
+</a>

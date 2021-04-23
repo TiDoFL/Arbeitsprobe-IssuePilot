@@ -1,0 +1,79 @@
+﻿@model IssuePilot.Models.ViewModels.TicketEditViewModel
+
+@{
+    ViewData["Title"] = "Ticket bearbeiten";
+}
+
+<h2>Ticket bearbeiten</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            @for (int i = 0; i < Model.OldTicketCategories.Count; i++)
+            {
+                @Html.HiddenFor(model => Model.OldTicketCategories[i])
+            }
+            @for (int i = 0; i < Model.ImageList.Count; i++)
+            {
+                @Html.HiddenFor(model => Model.ImageList[i].ImageData)
+                @Html.HiddenFor(model => Model.ImageList[i].ImageId)
+
+            }
+
+            <div class="form-group">
+                <label asp-for="Title" class="control-label">Titel</label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Deadline" class="control-label"></label>
+                <input asp-for="Deadline" class="form-control" />
+                <span asp-validation-for="Deadline" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label">Beschreibung</label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            @for (int i = 0; i < Model.ImageList.Count; i++)
+            {
+                <div class="form-group">
+                    <img src="@Model.ImageList[i].ImageData" />
+                    <div class="custom-control custom-checkbox my-1 mr-sm-2">
+                        <input asp-for="@Model.ImageList[i].IsSelected" type="checkbox" class="custom-control-input" id="@("a"+Model.ImageList[i].ImageId)">
+                        <label class="custom-control-label" for="@("a"+Model.ImageList[i].ImageId)">Löschen?</label>
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <input type="file" multiple="multiple" id="file1"
+                       name="file1" accept="image/*" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Weight" class="control-label"></label>
+                <select asp-for="Weight" class="form-control">
+                    <option value="0">Keine Gewichtung</option>
+                    <option value="1">Niedrig</option>
+                    <option value="2">Mittel</option>
+                    <option value="3">Hoch</option>
+                </select>
+                <span asp-validation-for="Weight" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SelectedTicketCategories" class="control-label">Tags</label>
+                <select asp-for="SelectedTicketCategories" class="selectpicker" asp-items="Model.CategoriesOfProject" multiple data-live-search="true"></select>
+                <span asp-validation-for="SelectedTicketCategories" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Speichern" class="btn btn-primary" />
+                <a class="btn btn-primary ml-2" asp-action="Details" asp-route-id="@Model.Id">Zurück</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
